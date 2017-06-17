@@ -1,3 +1,4 @@
 export default {
-  white: "#ebebeb"
+  white: "#ebebeb",
+  black: "#030303"
 };

@@ -1,32 +1,31 @@
-import React, { Component, PropTypes } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { Component, PropTypes } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Actions } from "react-native-router-flux";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
   },
   welcome: {
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10
   },
   instructions: {
-    textAlign: 'center',
-    color: '#333333',
+    textAlign: "center",
+    color: "#333333",
     marginBottom: 5
   }
 });
 
 export default class Home extends Component {
-  static propTypes = {
-    navigation: PropTypes.object.isRequired
-  };
+  static propTypes = {};
 
   toCounter = () => {
-    this.props.navigation.navigate('Counter');
+    Actions.counter();
   };
 
   render() {

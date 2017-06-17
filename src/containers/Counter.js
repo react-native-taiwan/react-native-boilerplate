@@ -1,16 +1,17 @@
-import React, { Component, PropTypes } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import Counter from '../components/Counter';
-import * as CounterActions from '../actions/counter';
+import React, { Component, PropTypes } from "react";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { Actions } from "react-native-router-flux";
+import Counter from "../components/Counter";
+import * as CounterActions from "../actions/counter";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
   },
   back: {
     margin: 10,
@@ -25,12 +26,10 @@ const styles = StyleSheet.create({
   dispatch => bindActionCreators(CounterActions, dispatch)
 )
 export default class CounterContainer extends Component {
-  static propTypes = {
-    navigation: PropTypes.object.isRequired
-  };
+  static propTypes = {};
 
   handleBack = () => {
-    this.props.navigation.goBack();
+    Actions.pop();
   };
 
   render() {
