@@ -4,7 +4,7 @@ const initialState = {
   scene: {}
 };
 
-export function routes(state = initialState, action) {
+export const routes = (state = initialState, action) => {
   switch (action.type) {
     case ActionConst.FOCUS:
       return {
@@ -14,4 +14,4 @@ export function routes(state = initialState, action) {
     default:
       return state;
   }
-}
+};
