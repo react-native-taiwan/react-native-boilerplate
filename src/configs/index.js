@@ -4,16 +4,18 @@ let config = {};
 
 const defaultConfig = {
   version: "1.0.0",
-  envMode
+  disableYellowBox: true,
+  envMode,
 };
 
-// --------------- dev mode -------------
 if (envMode === "development") {
+  // ------------- dev mode ---------------
   config = {
     ...defaultConfig,
     domain: ""
   };
 } else {
+  // ----------- production mode ----------
   config = {
     ...defaultConfig,
     domain: ""

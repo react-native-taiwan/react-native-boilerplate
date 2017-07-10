@@ -3,6 +3,9 @@ import { AppRegistry } from "react-native";
 import { Provider } from "react-redux";
 import AppRoutes from "./containers/AppRoutes";
 import configureStore from "./configureStore";
+import config from './config';
+
+console.disableYellowBox = config.disableYellowBox;
 
 const store = configureStore();
 
