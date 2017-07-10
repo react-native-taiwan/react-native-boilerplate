@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { Platform, Alert } from "react-native";
-import config from "../config";
-import { api } from "../config/api";
-import Storage from "../config/storage";
+import config from "../configs";
+import { api } from "../configs/api";
+import Storage from "../configs/storage";
 import { getItem, removeItem } from "./asyncStorage";
 import { Actions } from "react-native-router-flux";
 
@@ -17,18 +17,17 @@ const objectToParameters = obj => {
   return str;
 };
 
-export const apiFetch = async (action, data = {}, options = {}) => {
-  let url = config.domain + api[action].url;
-  const method = api[action].method.toUpperCase();
+export const apiFetch = async (api, data = {}, options = {}) => {
+  let url = config.domain + api.url;
+  const method = api.method.toUpperCase();
   const body = {
     app_version: `${Platform.OS}  ${config.version}`,
     ...data,
-    ...api[action].data,
+    ...api.data,
     type: data.type || "A"
   };
 
   const token = await getItem(Storage.AUTHORIZATION);
-
   const requestOption = {
     method,
     headers: {
@@ -37,7 +36,7 @@ export const apiFetch = async (action, data = {}, options = {}) => {
     ...options
   };
 
-  const auth = api[action].auth;
+  const auth = api.auth;
   if (auth) {
     if (_.isEmpty(token)) {
       // Can't find auth token
@@ -51,7 +50,6 @@ export const apiFetch = async (action, data = {}, options = {}) => {
       url += `?${objectToParameters(body)}`;
     } else {
       const formData = new FormData();
-
       for (const name in body) {
         if ((name && !_.isEmpty(body[name])) || _.isNumber(body[name])) {
           console.log(name, body[name]);
@@ -64,17 +62,17 @@ export const apiFetch = async (action, data = {}, options = {}) => {
 
   let responseJson;
   try {
-    console.log(`url:${url}`, requestOption);
+    // console.log(`url:${url}`, requestOption);
     const response = await fetch(url, requestOption);
-    console.log(`response status: ${response.status}`, response);
+    // console.log(`response status: ${response.status}`, response);
     responseJson = await response.json();
-    console.log("responseJson", responseJson);
+    // console.log("responseJson", responseJson);
     return responseJson;
   } catch (error) {
-    console.warn("error", error);
+    console.warn("api fetch error", error);
     return {
-      result: -1,
-      error_code: 87,
+      result: null,
+      error_code: null,
       msg: `fetch fail ${error.message}`
     };
   }
