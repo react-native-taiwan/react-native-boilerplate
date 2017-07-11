@@ -1,24 +1,26 @@
 import _ from "lodash";
 import { Platform, Alert } from "react-native";
 import config from "../configs";
-import { api } from "../configs/api";
+import { apiSpec } from "../configs/api";
 import Storage from "../configs/storage";
 import { getItem, removeItem } from "./asyncStorage";
 import { Actions } from "react-native-router-flux";
-
 export const Api = class {
-  constructor(props, urlParams) {
-    this._url = props.url || null;
-    this.method = props.method || "get";
-    this.auth = props.auth || false;
-    this.data = props.data || {};
+  constructor(apiType, urlParams) {
+    const spec = apiSpec[apiType];
+    this._url = spec.url || null;
+    this.method = spec.method || "get";
+    this.auth = spec.auth || false;
+    this.data = spec.data || {};
     this.compositeUrl =
-      props.compositeUrl ||
+      spec.compositeUrl ||
       function () {
         return this.url;
       };
     this.urlParams = urlParams;
-    this.fetch = apiFetch(this);
+    this.fetch = () => {
+      apiFetch(this);
+    };
   }
   get url() {
     return this._url || this.compositeUrl(this.urlParams);
@@ -61,7 +63,7 @@ export const apiFetch = async (api, data = {}, options = {}) => {
     } else {
       const formData = new FormData();
       for (const name in body) {
-        const isValueValid = name && !_.isEmpty(body[name]) || _.isNumber(body[name];
+        const isValueValid = name && !_.isEmpty(body[name]) || _.isNumber(body[name]);
         if (isValueValid) {
           formData.append(name, body[name]);
         }
@@ -71,11 +73,11 @@ export const apiFetch = async (api, data = {}, options = {}) => {
   }
 
   try {
-    // console.log(`url:${url}`, requestOption);
     const response = await fetch(url, requestOption);
-    // console.log(`response status: ${response.status}`, response);
     const responseJson = await response.json();
-    // console.log("responseJson", responseJson);
+    logFetch(`Url: ${url}`);
+    logFetch(`ResponseStatus: ${response.status}`, response);
+    logFetch("ResponseJson", responseJson);
     return responseJson;
   } catch (error) {
     console.warn("api fetch error", error);
@@ -97,3 +99,9 @@ const objectToParameters = obj => {
   }
   return str;
 };
+
+const logFetch = function () {
+  if (config.showFetchLog) {
+    console.log.apply(console, arguments);
+  }
+}
