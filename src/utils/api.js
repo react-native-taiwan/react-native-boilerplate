@@ -5,13 +5,16 @@ import { apiSpec } from "../configs/api";
 import Storage from "../configs/storage";
 import { getItem, removeItem } from "./asyncStorage";
 import { Actions } from "react-native-router-flux";
-export const Api = class {
-  constructor(apiType, urlParams) {
-    const spec = apiSpec[apiType];
+export const API = class {
+  constructor({ type, urlParams, urlData = {}, formData = {}, options = {} }) {
+    const spec = apiSpec[type];
     this._url = spec.url || null;
     this.method = spec.method || "get";
     this.auth = spec.auth || false;
-    this.data = spec.data || {};
+    this.data = {
+      ...formData,
+      ...spec.data
+    };
     this.compositeUrl =
       spec.compositeUrl ||
       function () {
@@ -21,19 +24,19 @@ export const Api = class {
     this.fetch = () => {
       apiFetch(this);
     };
+    this.options = options;
   }
   get url() {
     return this._url || this.compositeUrl(this.urlParams);
   }
 };
 
-export const apiFetch = async (api, data = {}, options = {}) => {
+export const apiFetch = async (api) => {
   let url = config.domain + api.url;
   const method = api.method.toUpperCase();
 
   const body = {
-    app_version: `${Platform.OS}  ${config.version}`,
-    ...data,
+    app_version: `${Platform.OS} ${config.version}`,
     ...api.data
   };
 
@@ -42,7 +45,7 @@ export const apiFetch = async (api, data = {}, options = {}) => {
     headers: {
       Accept: "application/json"
     },
-    ...options
+    ...api.options
   };
 
   const needAuth = api.auth;
@@ -89,16 +92,19 @@ export const apiFetch = async (api, data = {}, options = {}) => {
   }
 };
 
-const objectToParameters = obj => {
-  let str = "";
-  for (const key in obj) {
-    if (str !== "") {
-      str += "&";
-    }
-    str += `${key}=${encodeURIComponent(obj[key])}`;
-  }
-  return str;
-};
+// const objectToParameters = obj => {
+//   let str = "";
+//   for (const key in obj) {
+//     if (str !== "") {
+//       str += "&";
+//     }
+//     str += `${key}=${encodeURIComponent(obj[key])}`;
+//   }
+//   return str;
+// };
+
+const objectToParameters = obj =>
+  Object.keys(obj).map(key => `${key}=${encodeURIComponent(obj[key])}`).join('&');
 
 const logFetch = function () {
   if (config.showFetchLog) {
