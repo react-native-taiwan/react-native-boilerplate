@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RNBoilerplate</string>
+    <string name="facebook_app_id">__FACEBOOK_APP_ID__</string>
 </resources>

@@ -39,7 +39,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -74,9 +74,9 @@
 		</dict>
 	</array>
 	<key>FacebookAppID</key>
-	<string>117004232001878</string>
+	<string>__FACEBOOK_APP_ID__</string>
 	<key>FacebookDisplayName</key>
-	<string>LFP</string>
+	<string>__FACEBOOK_DISPLAY_NAME__</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

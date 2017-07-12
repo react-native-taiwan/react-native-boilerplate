@@ -95,7 +95,7 @@ android {
 
     defaultConfig {
         applicationId "com.rnboilerplate"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -133,10 +133,14 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-fbsdk')
+    // compile project(':react-native-fbsdk')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
+    compile(project(':react-native-fbsdk')){
+      exclude(group: 'com.facebook.android', module: 'facebook-android-sdk')
+    }
+    compile "com.facebook.android:facebook-android-sdk:4.22.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 
