@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import { StyleSheet, Platform, Alert, Text } from "react-native";
 import { connect } from "react-redux";
 import { Router, Scene, ActionConst, Actions } from "react-native-router-flux";
