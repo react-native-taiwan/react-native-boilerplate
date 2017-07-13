@@ -1,46 +1,59 @@
 import _ from "lodash";
 import { Platform, Alert } from "react-native";
-import config from "../config";
-import { api } from "../config/api";
-import Storage from "../config/storage";
+import config from "../configs";
+import { apiSpec } from "../configs/api";
+import Storage from "../configs/storage";
 import { getItem, removeItem } from "./asyncStorage";
 import { Actions } from "react-native-router-flux";
-
-const objectToParameters = obj => {
-  let str = "";
-  for (const key in obj) {
-    if (str !== "") {
-      str += "&";
-    }
-    str += `${key}=${encodeURIComponent(obj[key])}`;
+export const API = class {
+  constructor({ type, urlParams, urlData = {}, formData = {}, options = {} }) {
+    const spec = apiSpec[type];
+    this._url = spec.url || null;
+    this.method = spec.method || "get";
+    this.auth = spec.auth || false;
+    this.data = {
+      ...formData,
+      ...spec.data
+    };
+    this.compositeUrl =
+      spec.compositeUrl ||
+      function () {
+        return this.url;
+      };
+    this.urlParams = urlParams;
+    this.fetch = () => {
+      apiFetch(this);
+    };
+    this.options = options;
   }
-  return str;
+  get url() {
+    return this._url || this.compositeUrl(this.urlParams);
+  }
 };
 
-export const apiFetch = async (action, data = {}, options = {}) => {
-  let url = config.domain + api[action].url;
-  const method = api[action].method.toUpperCase();
-  const body = {
-    app_version: `${Platform.OS}  ${config.version}`,
-    ...data,
-    ...api[action].data,
-    type: data.type || "A"
-  };
+export const apiFetch = async (api) => {
+  let url = config.domain + api.url;
+  const method = api.method.toUpperCase();
 
-  const token = await getItem(Storage.AUTHORIZATION);
+  const body = {
+    app_version: `${Platform.OS} ${config.version}`,
+    ...api.data
+  };
 
   const requestOption = {
     method,
     headers: {
       Accept: "application/json"
     },
-    ...options
+    ...api.options
   };
 
-  const auth = api[action].auth;
-  if (auth) {
+  const needAuth = api.auth;
+  if (needAuth) {
+    const token = await getItem(Storage.AUTHORIZATION);
     if (_.isEmpty(token)) {
       // Can't find auth token
+      console.warn(`api ${api.url} needs auth, but can't find Authorization token in AsyncStorage`);
     } else {
       requestOption.headers.Authorization = `Bearer ${token}`;
     }
@@ -48,13 +61,13 @@ export const apiFetch = async (action, data = {}, options = {}) => {
 
   if (!_.isEmpty(body)) {
     if (method === "GET") {
-      url += `?${objectToParameters(body)}`;
+      const parameterString = objectToParameters(body);
+      url += `?${parameterString}`;
     } else {
       const formData = new FormData();
-
       for (const name in body) {
-        if ((name && !_.isEmpty(body[name])) || _.isNumber(body[name])) {
-          console.log(name, body[name]);
+        const isValueValid = name && !_.isEmpty(body[name]) || _.isNumber(body[name]);
+        if (isValueValid) {
           formData.append(name, body[name]);
         }
       }
@@ -62,20 +75,39 @@ export const apiFetch = async (action, data = {}, options = {}) => {
     }
   }
 
-  let responseJson;
   try {
-    console.log(`url:${url}`, requestOption);
     const response = await fetch(url, requestOption);
-    console.log(`response status: ${response.status}`, response);
-    responseJson = await response.json();
-    console.log("responseJson", responseJson);
+    const responseJson = await response.json();
+    logFetch(`Url: ${url}`);
+    logFetch(`ResponseStatus: ${response.status}`, response);
+    logFetch("ResponseJson", responseJson);
     return responseJson;
   } catch (error) {
-    console.warn("error", error);
+    console.warn("api fetch error", error);
     return {
-      result: -1,
-      error_code: 87,
+      result: null,
+      error_code: null,
       msg: `fetch fail ${error.message}`
     };
   }
 };
+
+// const objectToParameters = obj => {
+//   let str = "";
+//   for (const key in obj) {
+//     if (str !== "") {
+//       str += "&";
+//     }
+//     str += `${key}=${encodeURIComponent(obj[key])}`;
+//   }
+//   return str;
+// };
+
+const objectToParameters = obj =>
+  Object.keys(obj).map(key => `${key}=${encodeURIComponent(obj[key])}`).join('&');
+
+const logFetch = function () {
+  if (config.showFetchLog) {
+    console.log.apply(console, arguments);
+  }
+}

@@ -1,5 +1,4 @@
 import { AsyncStorage } from 'react-native';
-import { encrypt, decrypt } from './aes';
 
 const STORAGE_PREFIX = '@App:';
 

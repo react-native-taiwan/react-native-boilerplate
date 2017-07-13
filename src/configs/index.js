@@ -4,19 +4,26 @@ let config = {};
 
 const defaultConfig = {
   version: "1.0.0",
-  envMode
+  disableYellowBox: true,
+  showFetchLog: true,
+  envMode,
 };
 
-// --------------- dev mode -------------
 if (envMode === "development") {
+  // ------------- dev mode ---------------
   config = {
     ...defaultConfig,
-    domain: ""
+    domain: "http://localhost:8080"
   };
+
+
+
 } else {
+  // ----------- production mode ----------
   config = {
     ...defaultConfig,
-    domain: ""
+    domain: "",
+    showFetchLog: false
   };
 }
 

@@ -1,23 +1,26 @@
-export const apiAction = {
+export const API_TYPE = {
   LOGIN: "LOGIN",
-  REGISTER: "REGISTER"
+  REGISTER: "REGISTER",
+  GET_LIST: 'GET_LIST'
 };
 
-export const api = {
-  [apiAction.LOGIN]: {
-    url: "/api/index.php",
-    method: "post",
-    auth: false,
-    data: {
-      func: "login"
-    }
+export const apiSpec = {
+  /** Sample 
+  [API_TYPE.GET_LIST]: {
+    url: "/api/class",
+    method: "get",
   },
-  [apiAction.REGISTER]: {
-    url: "/api/index.php",
-    method: "post",
+  [API_TYPE.GET_LIST]: {
+    method: "get",
     auth: false,
-    data: {
-      func: "register"
-    }
-  }
+    data: {},
+    compositeUrl: ({ classId }) => {
+      return `/api/class/${classId}/list`;
+    },
+  } 
+  */
+  [API_TYPE.GET_LIST]: {
+    url: "/api/class",
+    method: "get",
+  },
 };
