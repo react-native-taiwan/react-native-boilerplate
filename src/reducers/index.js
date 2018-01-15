@@ -1,2 +1,8 @@
-export * from "./counter";
-export * from "./routes";
+import {
+  combineReducers,
+} from 'redux';
+import demo from './demo';
+
+export default combineReducers({
+  demo,
+});
