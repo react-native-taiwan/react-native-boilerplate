@@ -1,18 +1,3 @@
 {
-  "presets": [
-    "react-native-stage-0/decorator-support"
-  ],
-  "plugins": [],
-  "env": {
-    "development": {
-      "plugins": [
-        "transform-react-jsx-source"
-      ]
-    },
-    "production": {
-      "plugins": [
-        "transform-remove-console"
-      ]
-    }
-  }
+  "presets": [ "es2015","react-native", "stage-0"]
 }

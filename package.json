@@ -1,73 +1,53 @@
 {
-	"name": "RNBoilerplate",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node_modules/react-native/packager/packager.sh",
-		"ios-open": "open ios/*.xcodeproj",
-		"ios": "node node_modules/react-native/local-cli/cli.js run-ios",
-		"ios-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle --assets-dest ios",
-		"android": "node node_modules/react-native/local-cli/cli.js run-android",
-		"android-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-		"android-release": "npm run android-bundle && npm run android -- --variant=release",
-		"android-apk": "npm run android-bundle && cd android && ./gradlew assembleRelease",
-		"link": "node node_modules/react-native/local-cli/cli.js link",
-		"lint": "eslint src test *.js",
-		"test": "mocha --recursive --compilers js:babel-core/register -r test/setup",
-		"cover": "nyc npm test",
-		"remotedev": "remotedev-debugger --injectserver",
-		"postinstall": "npm run link && npm run remotedev && rndebugger-open"
-	},
-	"remotedev": {
-		"hostname": "localhost",
-		"port": 5678
-	},
-	"dependencies": {
-		"eslint-config-airbnb-base": "^11.2.0",
-		"eslint-plugin-import": "^2.7.0",
-		"immutable": "^3.8.1",
-		"lodash": "^4.17.4",
-		"moment": "^2.18.1",
-		"prop-types": "^15.5.10",
-		"react": "16.0.0-alpha.12",
-		"react-addons-test-utils": "^15.6.0",
-		"react-native": "^0.45.1",
-		"react-native-router-flux": "^3.40.1",
-		"react-native-vector-icons": "^4.2.0",
-		"react-redux": "^5.0.5",
-		"react-static-container": "^1.0.1",
-		"redux": "^3.6.0",
-		"redux-thunk": "^2.2.0"
-	},
-	"devDependencies": {
-		"babel-eslint": "^7.2.3",
-		"babel-jest": "20.0.3",
-		"babel-plugin-transform-remove-console": "^6.8.4",
-		"babel-polyfill": "^6.23.0",
-		"babel-preset-react-native": "2.0.0",
-		"babel-preset-react-native-stage-0": "^1.0.1",
-		"chai": "^4.0.2",
-		"enzyme": "^2.9.1",
-		"eslint": "^4.2.0",
-		"eslint-config-airbnb": "^15.0.2",
-		"eslint-plugin-jsx-a11y": "^6.0.2",
-		"eslint-plugin-react": "^7.1.0",
-		"immutable-devtools": "0.0.7",
-		"jest": "20.0.4",
-		"jsdom": "^11.0.0",
-		"mocha": "^3.4.2",
-		"node-fetch": "^1.7.1",
-		"nyc": "^11.0.2",
-		"proxyquire": "^1.8.0",
-		"react-dom": "^15.6.1",
-		"react-native-debugger-open": "^0.3.11",
-		"react-native-mock": "^0.3.1",
-		"react-test-renderer": "16.0.0-alpha.12",
-		"remote-redux-devtools": "^0.5.11",
-		"remote-redux-devtools-on-debugger": "^0.7.1",
-		"sinon": "^2.3.4"
-	},
-	"jest": {
-		"preset": "react-native"
-	}
+  "name": "RNBoilerplate",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "flux-constants": "^0.2.2",
+    "immutable": "^3.8.2",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-native": "^0.51.0",
+    "react-native-mock-render": "0.0.19",
+    "react-native-router-flux": "^4.0.0-beta.27",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
+    "styled-components": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-jest": "22.0.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react-native": "4.0.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "22.0.4",
+    "jsdom-global": "3.0.2",
+    "react-test-renderer": "16.0.0",
+    "remote-redux-devtools": "^0.5.12",
+    "sinon": "^4.1.4"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/configs/TestSetup.js"
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "!node_modules/react-runtime"
+    ],
+    "moduleNameMapper": {
+      ".+\\.(png|jpg|ttf|woff|woff2)$": "identity-obj-proxy"
+    }
+  }
 }
